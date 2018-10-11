@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.technology.dao.TeChnologyDbDao">
+
+    <select id="technologyProgressListDataPage" resultType="java.util.Map">
+		select apply.id,apply.baseid,car.platenumber,car.saleorgname,car.cartype,car.carorg,car.caruse_code,apply.assiststandard,apply.assistprice,apply.boardtime,apply.applystatus,apply.applytime from dev_apply apply 
+		left join dev_car_basedata car on apply.baseid=car.id
+		where 1=1
+		<if test="platenumber!=null and platenumber!=''">
+			and car.platenumber like CONCAT(CONCAT('%', #{platenumber}),'%')
+		</if>
+		<if test="startdate!=null and startdate!=''">
+			and unix_timestamp(apply.applytime)*1000&gt;=convert(#{startdate},SIGNED)
+		</if>
+		<if test="enddate!=null and enddate!=''">
+			and unix_timestamp(apply.applytime)*1000&lt;=convert(#{enddate},SIGNED)
+		</if>
+		order by  apply.applytime desc
+	</select>
+	
+    
+      <select id="technologyBhApplyListPage" resultType="java.util.Map">
+		select apply.id,apply.baseid,car.platenumber,car.saleorgname,car.cartype,car.carorg,car.caruse_code,apply.assiststandard,apply.assistprice,apply.boardtime,apply.applystatus,apply.applytime from dev_apply apply 
+		left join dev_car_basedata car on apply.baseid=car.id
+		where 1=1 and apply.applystatus in ('4','6','8','12')
+		<if test="platenumber!=null and platenumber!=''">
+			and car.platenumber like CONCAT(CONCAT('%', #{platenumber}),'%')
+		</if>
+		<if test="startdate!=null and startdate!=''">
+			and unix_timestamp(apply.applytime)*1000&gt;=convert(#{startdate},SIGNED)
+		</if>
+		<if test="enddate!=null and enddate!=''">
+			and unix_timestamp(apply.applytime)*1000&lt;=convert(#{enddate},SIGNED)
+		</if>
+		order by  apply.applytime desc
+	</select>
+	
+    <update id="updateBhApplyStatus">
+		update
+		dev_apply
+		set
+		applystatus = '15'
+		where id in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!-- 车企资质申请-auditresult is null or ='' -->
+	<select id="carqualifilist" resultType="java.util.Map">
+		select dev_car_qualifapply.id,dev_car_qualifapply.orgid,dev_car_qualifapply.entname,dev_car_qualifapply.princ, 
+dev_car_qualifapply.mobile,
+dev_car_qualifapply.email,
+dev_car_qualifapply.dom,
+dev_car_qualifapply.applytime 
+from dev_car_qualifapply 
+where 1=1
+<if test="auditresult==null">
+	and auditresult is null
+</if> 
+<if test="auditresult!=null">
+	and auditresult = #{auditresult}
+</if>
+<if test="platenumber!=null and platenumber!=''">
+			and dev_car_qualifapply.entname like CONCAT(CONCAT('%', #{key}),'%')
+		</if>
+	</select>
+	<select id="sellerqualifilist" resultType="java.util.Map">
+		select dev_seller_qualifapply.id,dev_seller_qualifapply.orgid,dev_seller_qualifapply.entname,dev_seller_qualifapply.princ, 
+dev_seller_qualifapply.mobile,
+dev_seller_qualifapply.email,
+dev_seller_qualifapply.dom,
+dev_seller_qualifapply.applytime 
+from dev_seller_qualifapply 
+where 1=1 
+<if test="auditresult==null">
+	and auditresult is null
+</if> 
+<if test="auditresult!=null">
+	and auditresult = #{auditresult}
+</if>  
+<if test="platenumber!=null and platenumber!=''">
+			and dev_seller_qualifapply.entname like CONCAT(CONCAT('%', #{key}),'%')
+		</if>
+	</select>
+	<update id="updateCarQualifiApplyStatus" parameterType="java.util.Map">
+		update dev_car_qualifapply set auditresult=#{auditresult},audittime=now(),auditoption=#{auditoption},auditer=#{auditer} where id = #{id} 		
+	</update>
+	<update id="updateSellerQualifiApplyStatus" parameterType="java.util.Map">
+		update dev_seller_qualifapply set auditresult=#{auditresult},audittime=now(),auditoption=#{auditoption},auditer=#{auditer} where id = #{id} 
+	</update>
+</mapper>

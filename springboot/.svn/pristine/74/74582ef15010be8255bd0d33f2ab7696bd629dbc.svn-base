@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.generator.dao.SysDictDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.generator.entity.SysDictEntity" id="sysDictMap">
+        <result property="dictId" column="dict_id"/>
+        <result property="dictType" column="dict_type"/>
+        <result property="itemValue" column="item_value"/>
+        <result property="itemName" column="item_name"/>
+        <result property="note" column="note"/>
+        <result property="seq" column="seq"/>
+    </resultMap>
+
+
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.qualifapply.dao.DevSellerQualifapplyDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.qualifapply.entity.DevSellerQualifapplyEntity" id="devSellerQualifapplyMap">
+        <result property="id" column="id"/>
+        <result property="orgid" column="orgid"/>
+        <result property="entname" column="entname"/>
+        <result property="princ" column="princ"/>
+        <result property="mobile" column="mobile"/>
+        <result property="email" column="email"/>
+        <result property="dom" column="dom"/>
+        <result property="applytime" column="applytime"/>
+        <result property="audittime" column="audittime"/>
+        <result property="auditoption" column="auditoption"/>
+        <result property="auditresult" column="auditresult"/>
+        <result property="auditer" column="auditer"/>
+        <result property="ylzd1" column="ylzd1"/>
+        <result property="ylzd2" column="ylzd2"/>
+        <result property="ylzd3" column="ylzd3"/>
+    </resultMap>
+
+
+</mapper>

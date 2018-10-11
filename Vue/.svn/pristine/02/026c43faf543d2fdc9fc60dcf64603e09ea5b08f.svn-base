@@ -1,0 +1,206 @@
+<template>
+  <div class="mod-config">
+    <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
+      <!--<el-form-item>-->
+        <el-row>
+          <el-col :span="6"><el-input v-model="dataForm.platenumber" placeholder="车牌号" clearable></el-input></el-col>
+          <el-col :span="8"   style="padding-left:20px;">
+            <el-date-picker
+            v-model="dataForm.daterange"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="申报开始日期"
+            end-placeholder="申报结束日期">
+          </el-date-picker>
+          </el-col>
+          <el-col :span="4" style="padding-left:30px;"> <el-button  icon="el-icon-search" @click="getDataList()">查询</el-button></el-col>
+        </el-row>
+      <!--</el-form-item>-->
+    </el-form>
+    <br>
+    <el-table
+      :data="dataList"
+      border
+      stripe
+      v-loading="dataListLoading"
+      @selection-change="selectionChangeHandle"
+      style="width: 100%;">
+      <el-table-column
+        type="index"
+        width="50">
+      </el-table-column>
+      <el-table-column
+        prop="platenumber"
+        header-align="center"
+        align="center"
+        label="车牌号">
+      </el-table-column>
+      <el-table-column
+        prop="cartype"
+        header-align="center"
+        align="center"
+        label="车辆种类">
+      </el-table-column>
+      <el-table-column
+        prop="carorg"
+        header-align="center"
+        align="center"
+        width="150"
+        label="车辆运行单位">
+      </el-table-column>
+      <el-table-column
+        prop="assiststandard"
+        header-align="center"
+        align="center"
+        label="补助标准">
+        <template slot-scope="scope">
+          {{scope.row.assiststandard}}万元/辆
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="assistprice"
+        header-align="center"
+        align="center"
+        label="补助资金数额">
+        <template slot-scope="scope">
+          {{scope.row.assistprice}}万元/辆
+        </template>
+      </el-table-column>
+      </el-table-column>
+      <el-table-column
+        prop="applytime"
+        header-align="center"
+        align="center"
+        width="190"
+        label="申请时间">
+      </el-table-column>
+      <el-table-column
+        prop="applystatus"
+        header-align="center"
+        align="center"
+        width="140"
+        label="申请状态">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.applystatus=='0'||scope.row.applystatus=='1X'" size="small" type="warning">发起申请</el-tag>
+          <el-tag v-else-if="scope.row.applystatus== '1'||scope.row.applystatus=='3X'" size="small">市科技局初审通过</el-tag>
+          <el-tag v-else-if="scope.row.applystatus == '2'" size="small" type="danger">市科技局初审驳回</el-tag>
+          <el-tag v-else-if="scope.row.applystatus=='3'||scope.row.applystatus=='5X'" size="small">市公安局初审通过</el-tag>
+          <el-tag v-else-if="scope.row.applystatus == '4'" size="small" type="danger">市公安局审核驳回</el-tag>
+          <el-tag v-else-if="scope.row.applystatus=='5'||scope.row.applystatus=='7X'" size="small">市财政局初审通过</el-tag>
+          <el-tag v-else-if="scope.row.applystatus == '6'" size="small" type="danger">市财政局初审驳回</el-tag>
+          <el-tag v-else-if="scope.row.applystatus=='7'" size="small">区财政局初审通过</el-tag>
+          <el-tag v-else-if="scope.row.applystatus == '8'" size="small" type="danger">区财政局初审驳回</el-tag>
+          <el-tag v-else-if="scope.row.applystatus == '9X'&&scope.row.caruse_code=='01'" size="small">区财政局初审通过</el-tag>
+          <el-tag v-else-if="scope.row.applystatus == '9X'&&scope.row.caruse_code!='01'" size="small">市公安局审核通过</el-tag>
+          <el-tag v-else-if="scope.row.applystatus=='9'||scope.row.applystatus=='11X'" size="small">市科技局复审通过</el-tag>
+          <el-tag v-else-if="scope.row.applystatus == '10'" size="small" type="danger">市科技局复审驳回</el-tag>
+          <el-tag v-else-if="scope.row.applystatus=='11'" size="small">市财政局复审通过</el-tag>
+          <el-tag v-else-if="scope.row.applystatus == '12'" size="small" type="danger">市财政局复审驳回</el-tag>
+          <el-tag v-else-if="scope.row.applystatus == '13'" size="small" type="success">补贴已发放</el-tag>
+          <el-tag v-else-if="scope.row.applystatus == '14'" size="small" type="success">经销商已确认</el-tag>
+		  <el-tag v-else-if="scope.row.applystatus == '15'" size="small" type="danger">市科技局确认驳回</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        header-align="center"
+        align="center"
+        width="110"
+        label="操作">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click="detailHandle(scope.row.id,scope.row.baseid)">查看</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      @size-change="sizeChangeHandle"
+      @current-change="currentChangeHandle"
+      :current-page="pageIndex"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="pageSize"
+      :total="totalPage"
+      layout="total, sizes, prev, pager, next, jumper">
+    </el-pagination>
+  </div>
+</template>
+<style>
+  .el-date-editor .el-range-separator{width:9%}
+</style>
+<script>
+  export default {
+    data () {
+      return {
+        dataForm: {
+          platenumber: '',
+          daterange: []
+        },
+        dataList: [],
+        pageIndex: 1,
+        pageSize: 10,
+        totalPage: 0,
+        dataListLoading: false,
+        dataListSelections: []
+      }
+    },
+    activated () {
+      this.getDataList()
+    },
+    methods: {
+      // 获取数据列表
+      getDataList () {
+        this.dataListLoading = true
+        var params;
+        if(this.dataForm.daterange!=null&&this.dataForm.daterange.length>0){
+          params={
+            'page': this.pageIndex,
+            'limit': this.pageSize,
+            'platenumber': this.dataForm.platenumber,
+            'startdate':this.dataForm.daterange[0].getTime(),
+            'enddate':this.dataForm.daterange[1].getTime()
+          }
+        }else{
+          params={
+            'page': this.pageIndex,
+            'limit': this.pageSize,
+            'platenumber': this.dataForm.platenumber,
+            'startdate':'',
+            'enddate':''
+          }
+        }
+        console.log(params)
+        this.$http({
+          url: this.$http.adornUrl('/areafinance/devapply/areaFinanceApplyProgressList'),
+          method: 'get',
+          params: this.$http.adornParams(params)
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.dataList = data.page.list
+            this.totalPage = data.page.totalCount
+          } else {
+            this.dataList = []
+            this.totalPage = 0
+          }
+          this.dataListLoading = false
+        })
+      },
+      // 每页数
+      sizeChangeHandle (val) {
+        this.pageSize = val
+        this.pageIndex = 1
+        this.getDataList()
+      },
+      // 当前页
+      currentChangeHandle (val) {
+        this.pageIndex = val
+        this.getDataList()
+      },
+      // 多选
+      selectionChangeHandle (val) {
+        this.dataListSelections = val
+      },
+      detailHandle (id,baseid) {
+        this.$router.push({path:'/areaFinanceProgress-detail',name:"areaFinanceProgress-detail",params: {  baseid: baseid,id:id}});
+      }
+    }
+  }
+</script>

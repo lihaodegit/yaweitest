@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.areafinance.dao.DevAreaFinanceDao">
+
+    <select id="areaFinanceProgressListDataPage" resultType="java.util.Map">
+		select apply.id,apply.baseid,car.platenumber,car.saleorgname,car.cartype,car.carorg,car.caruse_code,apply.assiststandard,apply.assistprice,apply.boardtime,apply.applystatus,apply.applytime from dev_apply apply 
+		left join dev_car_basedata car on apply.baseid=car.id
+		where 1=1 and  apply.id in (
+			select distinct applyid from dev_ope_history where opeorg =#{orgid}
+		)
+		<if test="platenumber!=null and platenumber!=''">
+			and car.platenumber like CONCAT(CONCAT('%', #{platenumber}),'%')
+		</if>
+		<if test="startdate!=null and startdate!=''">
+			and unix_timestamp(apply.applytime)*1000&gt;=convert(#{startdate},SIGNED)
+		</if>
+		<if test="enddate!=null and enddate!=''">
+			and unix_timestamp(apply.applytime)*1000&lt;=convert(#{enddate},SIGNED)
+		</if>
+		order by  apply.applytime desc
+	</select>
+
+</mapper>

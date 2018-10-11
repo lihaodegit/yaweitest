@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.apply.dao.DevApplyDao">
+
+    <select id="progressListDataPage" resultType="java.util.Map">
+		select apply.id,apply.baseid,car.platenumber,car.saleorgname,car.cartype,car.carorg,car.caruse_code,apply.assiststandard,apply.assistprice,apply.boardtime,apply.applystatus,apply.applytime from dev_apply apply 
+		left join dev_car_basedata car on apply.baseid=car.id
+		where car.saleorgid=#{saleorgid} 
+		<if test="platenumber!=null and platenumber!=''">
+			and car.platenumber like CONCAT(CONCAT('%', #{platenumber}),'%')
+		</if>
+		<if test="startdate!=null and startdate!=''">
+			and unix_timestamp(apply.applytime)*1000&gt;=convert(#{startdate},SIGNED)
+		</if>
+		<if test="enddate!=null and enddate!=''">
+			and unix_timestamp(apply.applytime)*1000&lt;=convert(#{enddate},SIGNED)
+		</if>
+		order by  apply.applytime desc
+	</select>
+<!-- 	市科技局初审和复审 -->
+    <select id="selectApplyByPage" resultType="java.util.Map">
+	    SELECT apply.*,car.platenumber,org.org_name FROM dev_apply apply 
+	     LEFT JOIN dev_car_basedata car on car.id = apply.baseid LEFT JOIN sys_org org
+         on org.org_id  = apply.orgid
+	     where 1=1
+	     <if test="key != null and key != '' ">
+	         and car.platenumber like concat("%",concat(#{key},"%")) or  org.org_name like concat("%",concat(#{key},"%"))
+	     </if>
+	     <if test="type == 1">
+	         and apply.applystatus = '0'
+	     </if>
+	      <if test="type == 2">
+	         and apply.applystatus = '3' or apply.applystatus = '7' 
+	     </if>
+	     <if test="applystatus!=null">
+	     	and apply.applystatus = #{applystatus}
+	     </if>
+	     order by applytime desc
+	   
+	</select>
+	<!-- 申请统一提交 -->
+	<update id="applyUniSubmit" parameterType="java.util.Map">
+		update dev_apply set applystatus=#{status} where applystatus=#{criteriastatus}
+	</update>
+    <!--市公安局初审 -->
+	<select id="selectPoliceApplyByPage" resultType="java.util.Map">
+	    SELECT apply.*,car.platenumber,org.org_name FROM dev_apply apply 
+	     LEFT JOIN dev_car_basedata car on car.id = apply.baseid LEFT JOIN sys_org org
+         on org.org_id  = apply.orgid
+	     where 1=1
+	     <if test="key != null and key != '' ">
+	         and car.platenumber like concat("%",concat(#{key},"%")) or  org.org_name like concat("%",concat(#{key},"%"))
+	     </if>
+	      and apply.applystatus = '1'
+	      order by applytime desc
+	</select>
+	  <!--市财政局复审初审  type（1 初审2复审）-->
+	<select id="selectCityFinanceApplyByPage" resultType="java.util.Map">
+	    SELECT apply.*,car.platenumber,org.org_name FROM dev_apply apply 
+	     LEFT JOIN dev_car_basedata car on car.id = apply.baseid 
+	     LEFT JOIN sys_org org on org.org_id  = apply.orgid
+	     where 1=1
+	     <if test="key != null and key != '' ">
+	         and car.platenumber like concat("%",concat(#{key},"%")) or  org.org_name like concat("%",concat(#{key},"%"))
+	     </if>
+	     <if test="type == 1">
+	        and  car.caruse_code = '01'
+	        and apply.applystatus = '3'
+	     </if>
+	     <if test="type == 2">
+	         and apply.applystatus = '9'
+	     </if>
+	      order by applytime desc
+	</select>
+	
+	   <!--区财政局复审初审type（1 初审2复审） -->
+	<select id="selectAreaFinanceApplyByPage" resultType="java.util.Map">
+	    SELECT apply.*,car.platenumber,org.org_name FROM dev_apply apply 
+	     LEFT JOIN dev_car_basedata car on car.id = apply.baseid 
+	     LEFT JOIN sys_org org on org.org_id  = apply.orgid
+	     where 1=1
+	     and car.cararea_code = #{areaCode}
+	     <if test="key != null and key != '' ">
+	         and car.platenumber like concat("%",concat(#{key},"%")) or  org.org_name like concat("%",concat(#{key},"%"))
+	     </if>
+	      <if test="type == 1">
+	         and car.caruse_code = '01'
+	         and apply.applystatus = '5'
+	     </if>
+	     <if test="type == 2">
+	         and apply.applystatus = '11'
+	     </if>
+	      order by applytime desc
+	</select>
+	<select id="qczjcnt" parameterType="java.util.Map" resultType="java.util.Map">
+		select count(1) as cnt from dev_apply a,dev_car_basedata b where a.baseid=b.id and b.cararea_code=#{areacode} and a.applystatus=#{status}
+	</select>
+	<select id="qczjsel" parameterType="java.util.Map" resultType="java.util.Map">
+		select a.* from dev_apply a,dev_car_basedata b where a.baseid=b.id and b.cararea_code=#{areacode} and a.applystatus=#{status}
+	</select>
+	<select id="qczjUpdate" parameterType="java.util.Map" resultType="java.util.Map">
+		update dev_apply a 
+set a.applystatus=#{status} 
+where a.applystatus=#{criteriastatus} and exists(
+select 1 from dev_car_basedata b 
+where a.baseid=b.id
+)
+	</select>
+</mapper>

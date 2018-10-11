@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.carBaseData.dao.DevCarBasedatasDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.carBaseData.entity.DevCarBasedatasEntity" id="devCarBasedataMap">
+        <result property="id" column="id"/>
+        <result property="saleorgid" column="saleorgid"/>
+        <result property="saleorgname" column="saleorgname"/>
+        <result property="platenumber" column="platenumber"/>
+        <result property="carprop" column="carprop"/>
+        <result property="carpropCode" column="carprop_code"/>
+        <result property="carcity" column="carcity"/>
+        <result property="cararea" column="cararea"/>
+        <result property="carareaCode" column="cararea_code"/>
+        <result property="carorg" column="carorg"/>
+        <result property="cartype" column="cartype"/>
+        <result property="cartypeCode" column="cartype_code"/>
+        <result property="caruse" column="caruse"/>
+        <result property="caruseCode" column="caruse_code"/>
+        <result property="carmodel" column="carmodel"/>
+        <result property="ekgval" column="ekgval"/>
+        <result property="noticebatch" column="noticebatch"/>
+        <result property="vin" column="vin"/>
+        <result property="applystandard" column="applystandard"/>
+        <result property="pricereal" column="pricereal"/>
+        <result property="price" column="price"/>
+        <result property="receiptnum" column="receiptnum"/>
+        <result property="receiptdate" column="receiptdate"/>
+        <result property="runcarddate" column="runcarddate"/>
+        <result property="runmiles" column="runmiles"/>
+        <result property="chargetime" column="chargetime"/>
+        <result property="chargepower" column="chargepower"/>
+        <result property="totalrunmiles" column="totalrunmiles"/>
+        <result property="monthrunmiles" column="monthrunmiles"/>
+        <result property="powerconsume" column="powerconsume"/>
+        <result property="totalchargepower" column="totalchargepower"/>
+        <result property="dayrunhours" column="dayrunhours"/>
+        <result property="ismonitor" column="ismonitor"/>
+        <result property="ismonitorCode" column="ismonitor_code"/>
+        <result property="monitororg" column="monitororg"/>
+        <result property="locremark" column="locremark"/>
+        <result property="batterysinglemodel" column="batterysinglemodel"/>
+        <result property="batterysingleorg" column="batterysingleorg"/>
+        <result property="batteryboxmodel" column="batteryboxmodel"/>
+        <result property="batterypower" column="batterypower"/>
+        <result property="batteryorg" column="batteryorg"/>
+        <result property="batteryprice" column="batteryprice"/>
+        <result property="batteryqualityyear" column="batteryqualityyear"/>
+        <result property="machinemodel" column="machinemodel"/>
+        <result property="machinepower" column="machinepower"/>
+        <result property="machineorg" column="machineorg"/>
+        <result property="machineprice" column="machineprice"/>
+        <result property="ylzd1" column="ylzd1"/>
+        <result property="ylzd2" column="ylzd2"/>
+        <result property="ylzd3" column="ylzd3"/>
+        <result property="ylzd4" column="ylzd4"/>
+        <result property="ylzd5" column="ylzd5"/>
+    </resultMap>
+
+   <select id="carApplyprogressListDataPage" resultType="java.util.Map">
+		select apply.id,apply.baseid,car.platenumber,car.saleorgname,car.cartype,car.carorg,car.caruse_code,apply.assiststandard,apply.assistprice,apply.boardtime,apply.applystatus,apply.applytime from dev_apply apply 
+		left join dev_car_basedata car on apply.baseid=car.id
+		where car.ylzd3=#{carcompanyid} 
+		<if test="platenumber!=null and platenumber!=''">
+			and car.platenumber like CONCAT(CONCAT('%', #{platenumber}),'%')
+		</if>
+		<if test="startdate!=null and startdate!=''">
+			and unix_timestamp(apply.applytime)*1000&gt;=convert(#{startdate},SIGNED)
+		</if>
+		<if test="enddate!=null and enddate!=''">
+			and unix_timestamp(apply.applytime)*1000&lt;=convert(#{enddate},SIGNED)
+		</if>
+		order by  apply.applytime desc
+	</select>
+	
+     <update id="updateCarApplyNullFlag">
+		update
+		dev_car_basedata
+		set
+		ylzd2 = null
+		where id=#{id}
+	</update>
+   
+</mapper>

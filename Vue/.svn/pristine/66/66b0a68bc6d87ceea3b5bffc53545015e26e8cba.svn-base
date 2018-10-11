@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>青岛市新能源汽车补贴审批系统</title>
+  <style>
+  /*全局滚动条样式*/
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/ 
+  ::-webkit-scrollbar  
+{  
+    width: 10px;  
+    height: 10px;  
+    background-color: #F5F5F5;  
+}  
+  
+/*定义滚动条轨道 内阴影+圆角*/  
+::-webkit-scrollbar-track  
+{  
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);  
+    border-radius: 10px;  
+    background-color: #F5F5F5;  
+}  
+  
+/*定义滑块 内阴影+圆角*/  
+::-webkit-scrollbar-thumb  
+{  
+    border-radius: 10px;  
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);  
+    background-color: #374B56;  
+} 
+  
+  </style>
+  <% if (process.env.NODE_ENV === 'production') { %>
+    <!-- 生产环境 -->
+    <script>document.write('<script src="./config/index.js?t=' + new Date().getTime() + '"><\/script>');</script>
+  <% }else { %>
+    <!-- 开发环境 -->
+    <link rel="shortcut icon" type="image/x-icon" href="./static/img/favicon.ico">
+    <script src="./static/config/index.js"></script>
+    <script src="./static/plugins/mock-1.0.0-beta3/mock-min.js"></script>
+    <script src="./static/plugins/echarts-3.8.5/echarts.common.min.js"></script>
+    <script src="./static/plugins/ueditor-1.4.3.3/ueditor.config.js"></script>
+    <script src="./static/plugins/ueditor-1.4.3.3/ueditor.all.min.js"></script>
+    <script src="./static/plugins/ueditor-1.4.3.3/lang/zh-cn/zh-cn.js"></script>
+  <% } %>
+</head>
+<body>
+  <div id="app"></div>
+</body>
+</html>

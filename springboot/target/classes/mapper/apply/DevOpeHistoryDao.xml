@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.apply.dao.DevOpeHistoryDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.apply.entity.DevOpeHistoryEntity" id="devOpeHistoryMap">
+        <result property="id" column="id"/>
+        <result property="applyid" column="applyid"/>
+        <result property="opetype" column="opetype"/>
+        <result property="opetime" column="opetime"/>
+        <result property="opeorg" column="opeorg"/>
+        <result property="opeuserid" column="opeuserid"/>
+        <result property="opinion" column="opinion"/>
+        <result property="policeopinion" column="policeopinion"/>
+        <result property="ylzd1" column="ylzd1"/>
+        <result property="ylzd2" column="ylzd2"/>
+        <result property="ylzd3" column="ylzd3"/>
+        <result property="ylzd4" column="ylzd4"/>
+        <result property="ylzd5" column="ylzd5"/>
+        <result property="ylzd6" column="ylzd6"/>
+    </resultMap>
+    
+    
+  	<select id="getOpeHistoryNodeList" resultType="java.util.Map">
+		select his.* ,org.org_name,u.username,dict.item_name from dev_ope_history his 
+		left join sys_org org on his.opeorg=org_id 
+		left join sys_user u on his.opeuserid=u.user_id
+		left join sys_dict dict on his.opetype=dict.item_value and dict.dict_type='OPE_TYPE'
+		where applyid=#{applyid} and opetype not like '%X'
+		ORDER BY opetime asc
+	</select>
+	<!-- 申请统一提交 -->
+	<update id="applyUniSubmit" parameterType="java.util.Map">
+		update dev_ope_history a 
+	set a.opetype = (select applystatus from dev_apply b where a.applyid=b.id) 
+	where exists(select 1 from dev_apply b where a.applyid=b.id)
+	</update>
+	
+</mapper>

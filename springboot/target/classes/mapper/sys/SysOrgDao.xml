@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.SysOrgDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.SysOrgEntity" id="sysOrgMap">
+        <result property="orgId" column="org_id"/>
+        <result property="orgName" column="org_name"/>
+        <result property="orgCode" column="org_code"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="ylzd1" column="ylzd1"/>
+        <result property="ylzd2" column="ylzd2"/>
+        <result property="ylzd3" column="ylzd3"/>
+        <result property="addr" column="addr"/>
+        <result property="type" column="type"/>
+    </resultMap>
+
+
+</mapper>

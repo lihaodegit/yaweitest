@@ -1,0 +1,228 @@
+<template>
+  <el-dialog
+    :title="!dataForm.id ? '新增' : '修改'"
+    :close-on-click-modal="false"
+    :visible.sync="visible">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+    <el-form-item label="车辆基础信息表主键" prop="baseid">
+      <el-input v-model="dataForm.baseid" placeholder="车辆基础信息表主键"></el-input>
+    </el-form-item>
+    <el-form-item label="挂牌时间" prop="boardtime">
+      <el-input v-model="dataForm.boardtime" placeholder="挂牌时间"></el-input>
+    </el-form-item>
+    <el-form-item label="补助标准(万元辆)" prop="assiststandard">
+      <el-input v-model="dataForm.assiststandard" placeholder="补助标准(万元辆)"></el-input>
+    </el-form-item>
+    <el-form-item label="补助资金数额（万元辆）" prop="assistprice">
+      <el-input v-model="dataForm.assistprice" placeholder="补助资金数额（万元辆）"></el-input>
+    </el-form-item>
+    <el-form-item label="市级财政补助资金数额（万元辆）" prop="assistcityprice">
+      <el-input v-model="dataForm.assistcityprice" placeholder="市级财政补助资金数额（万元辆）"></el-input>
+    </el-form-item>
+    <el-form-item label="区级财政补助资金数额（万元辆）" prop="assistareaprice">
+      <el-input v-model="dataForm.assistareaprice" placeholder="区级财政补助资金数额（万元辆）"></el-input>
+    </el-form-item>
+    <el-form-item label="系统算出指导补助金额（万元辆）" prop="syscalc">
+      <el-input v-model="dataForm.syscalc" placeholder="系统算出指导补助金额（万元辆）"></el-input>
+    </el-form-item>
+    <el-form-item label="车辆领域" prop="carfield">
+      <el-input v-model="dataForm.carfield" placeholder="车辆领域"></el-input>
+    </el-form-item>
+    <el-form-item label="申请状态 0发起待市科技局审核  1市科技局审核通过 2市科技局审核驳回 3公安局审核通过 4公安局审核驳回 5市财政局审核通过  6市财政局审核驳回  7区财政局审核通过 8区财政局审核驳回 9市科技局审核通过  10市科技局审核驳回 11市财政局审核通过  12市财政局审核驳回  13区财政局付款确认  14经销商收到钱确认" prop="applystatus">
+      <el-input v-model="dataForm.applystatus" placeholder="申请状态 0发起待市科技局审核  1市科技局审核通过 2市科技局审核驳回 3公安局审核通过 4公安局审核驳回 5市财政局审核通过  6市财政局审核驳回  7区财政局审核通过 8区财政局审核驳回 9市科技局审核通过  10市科技局审核驳回 11市财政局审核通过  12市财政局审核驳回  13区财政局付款确认  14经销商收到钱确认"></el-input>
+    </el-form-item>
+    <el-form-item label="申请时间" prop="applytime">
+      <el-input v-model="dataForm.applytime" placeholder="申请时间"></el-input>
+    </el-form-item>
+    <el-form-item label="经销商单位id" prop="orgid">
+      <el-input v-model="dataForm.orgid" placeholder="经销商单位id"></el-input>
+    </el-form-item>
+    <el-form-item label="申请用户id" prop="applyuserid">
+      <el-input v-model="dataForm.applyuserid" placeholder="申请用户id"></el-input>
+    </el-form-item>
+    <el-form-item label="预留字段1" prop="ylzd1">
+      <el-input v-model="dataForm.ylzd1" placeholder="预留字段1"></el-input>
+    </el-form-item>
+    <el-form-item label="预留字段2" prop="ylzd2">
+      <el-input v-model="dataForm.ylzd2" placeholder="预留字段2"></el-input>
+    </el-form-item>
+    <el-form-item label="预留字段3" prop="ylzd3">
+      <el-input v-model="dataForm.ylzd3" placeholder="预留字段3"></el-input>
+    </el-form-item>
+    <el-form-item label="预留字段4" prop="ylzd4">
+      <el-input v-model="dataForm.ylzd4" placeholder="预留字段4"></el-input>
+    </el-form-item>
+    <el-form-item label="预留字段5" prop="ylzd5">
+      <el-input v-model="dataForm.ylzd5" placeholder="预留字段5"></el-input>
+    </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="visible = false">取消</el-button>
+      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+    </span>
+  </el-dialog>
+</template>
+
+<script>
+  export default {
+    data () {
+      return {
+        visible: false,
+        dataForm: {
+          id: 0,
+          baseid: '',
+          boardtime: '',
+          assiststandard: '',
+          assistprice: '',
+          assistcityprice: '',
+          assistareaprice: '',
+          syscalc: '',
+          carfield: '',
+          applystatus: '',
+          applytime: '',
+          orgid: '',
+          applyuserid: '',
+          ylzd1: '',
+          ylzd2: '',
+          ylzd3: '',
+          ylzd4: '',
+          ylzd5: ''
+        },
+        dataRule: {
+          baseid: [
+            { required: true, message: '车辆基础信息表主键不能为空', trigger: 'blur' }
+          ],
+          boardtime: [
+            { required: true, message: '挂牌时间不能为空', trigger: 'blur' }
+          ],
+          assiststandard: [
+            { required: true, message: '补助标准(万元辆)不能为空', trigger: 'blur' }
+          ],
+          assistprice: [
+            { required: true, message: '补助资金数额（万元辆）不能为空', trigger: 'blur' }
+          ],
+          assistcityprice: [
+            { required: true, message: '市级财政补助资金数额（万元辆）不能为空', trigger: 'blur' }
+          ],
+          assistareaprice: [
+            { required: true, message: '区级财政补助资金数额（万元辆）不能为空', trigger: 'blur' }
+          ],
+          syscalc: [
+            { required: true, message: '系统算出指导补助金额（万元辆）不能为空', trigger: 'blur' }
+          ],
+          carfield: [
+            { required: true, message: '车辆领域不能为空', trigger: 'blur' }
+          ],
+          applystatus: [
+            { required: true, message: '申请状态 0发起待市科技局审核  1市科技局审核通过 2市科技局审核驳回 3公安局审核通过 4公安局审核驳回 5市财政局审核通过  6市财政局审核驳回  7区财政局审核通过 8区财政局审核驳回 9市科技局审核通过  10市科技局审核驳回 11市财政局审核通过  12市财政局审核驳回  13区财政局付款确认  14经销商收到钱确认不能为空', trigger: 'blur' }
+          ],
+          applytime: [
+            { required: true, message: '申请时间不能为空', trigger: 'blur' }
+          ],
+          orgid: [
+            { required: true, message: '经销商单位id不能为空', trigger: 'blur' }
+          ],
+          applyuserid: [
+            { required: true, message: '申请用户id不能为空', trigger: 'blur' }
+          ],
+          ylzd1: [
+            { required: true, message: '预留字段1不能为空', trigger: 'blur' }
+          ],
+          ylzd2: [
+            { required: true, message: '预留字段2不能为空', trigger: 'blur' }
+          ],
+          ylzd3: [
+            { required: true, message: '预留字段3不能为空', trigger: 'blur' }
+          ],
+          ylzd4: [
+            { required: true, message: '预留字段4不能为空', trigger: 'blur' }
+          ],
+          ylzd5: [
+            { required: true, message: '预留字段5不能为空', trigger: 'blur' }
+          ]
+        }
+      }
+    },
+    methods: {
+      init (id) {
+        this.dataForm.id = id || 0;
+        this.visible = true;
+        this.$nextTick(() => {
+          this.$refs['dataForm'].resetFields();
+          if (this.dataForm.id) {
+            this.$http({
+              url: this.$http.adornUrl(`/generator/devapply/info/${this.dataForm.id}`),
+              method: 'get',
+              params: this.$http.adornParams()
+            }).then(({data}) => {
+              if (data && data.code === 0) {
+                this.dataForm.baseid = data.devapply.baseid;
+                this.dataForm.boardtime = data.devapply.boardtime;
+                this.dataForm.assiststandard = data.devapply.assiststandard;
+                this.dataForm.assistprice = data.devapply.assistprice;
+                this.dataForm.assistcityprice = data.devapply.assistcityprice;
+                this.dataForm.assistareaprice = data.devapply.assistareaprice;
+                this.dataForm.syscalc = data.devapply.syscalc;
+                this.dataForm.carfield = data.devapply.carfield;
+                this.dataForm.applystatus = data.devapply.applystatus;
+                this.dataForm.applytime = data.devapply.applytime;
+                this.dataForm.orgid = data.devapply.orgid;
+                this.dataForm.applyuserid = data.devapply.applyuserid;
+                this.dataForm.ylzd1 = data.devapply.ylzd1;
+                this.dataForm.ylzd2 = data.devapply.ylzd2;
+                this.dataForm.ylzd3 = data.devapply.ylzd3;
+                this.dataForm.ylzd4 = data.devapply.ylzd4;
+                this.dataForm.ylzd5 = data.devapply.ylzd5
+              }
+            })
+          }
+        })
+      },
+      // 表单提交
+      dataFormSubmit () {
+        this.$refs['dataForm'].validate((valid) => {
+          if (valid) {
+            this.$http({
+              url: this.$http.adornUrl(`/generator/devapply/${!this.dataForm.id ? 'save' : 'update'}`),
+              method: 'post',
+              data: this.$http.adornData({
+                'id': this.dataForm.id || undefined,
+                'baseid': this.dataForm.baseid,
+                'boardtime': this.dataForm.boardtime,
+                'assiststandard': this.dataForm.assiststandard,
+                'assistprice': this.dataForm.assistprice,
+                'assistcityprice': this.dataForm.assistcityprice,
+                'assistareaprice': this.dataForm.assistareaprice,
+                'syscalc': this.dataForm.syscalc,
+                'carfield': this.dataForm.carfield,
+                'applystatus': this.dataForm.applystatus,
+                'applytime': this.dataForm.applytime,
+                'orgid': this.dataForm.orgid,
+                'applyuserid': this.dataForm.applyuserid,
+                'ylzd1': this.dataForm.ylzd1,
+                'ylzd2': this.dataForm.ylzd2,
+                'ylzd3': this.dataForm.ylzd3,
+                'ylzd4': this.dataForm.ylzd4,
+                'ylzd5': this.dataForm.ylzd5
+              })
+            }).then(({data}) => {
+              if (data && data.code === 0) {
+                this.$message({
+                  message: '操作成功',
+                  type: 'success',
+                  duration: 1500,
+                  onClose: () => {
+                    this.visible = false;
+                    this.$emit('refreshDataList')
+                  }
+                })
+              } else {
+                this.$message.error(data.msg)
+              }
+            })
+          }
+        })
+      }
+    }
+  }
+</script>
